@@ -42,8 +42,7 @@ The website demonstrates **basic navigation, user forms, and creative design sec
 2. Open the `index.html` file (Landing Page) in your preferred web browser.  
 3. Use the navigation bar to move between pages:
    - `index.html` → Landing Page  
-   - `login.html` → Login Page  
-   - `register.html` → Registration Page  
+   - `login.html` → Login/Registration Page 
 
 ---
 
