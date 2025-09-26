@@ -71,32 +71,71 @@ document.addEventListener("DOMContentLoaded", function () {
   let confirmModal = document.getElementById("confirmModal");
   let confirmYes = document.getElementById("confirmYes");
   let confirmNo = document.getElementById("confirmNo");
-  let targetHref = ""; // Store target URL
+  let targetHref = "";
+  let targetForm = null;
 
-  // Get all action buttons
+  // Attach to all action buttons
   document.querySelectorAll(".actionBtn").forEach(btn => {
-    btn.addEventListener("click", function () {
-      targetHref = this.getAttribute("data-href"); // Get href from clicked button
-      confirmModal.style.display = "flex"; // Show modal
+    btn.addEventListener("click", function (event) {
+      event.preventDefault(); // Stop default redirect/submit
+      targetHref = this.getAttribute("data-href");
+      targetForm = this.closest("form"); // Check if inside form
+      confirmModal.style.display = "flex";
     });
   });
 
-  // YES -> redirect to the stored href
+  // YES -> do the action
   confirmYes.addEventListener("click", function () {
-    if (targetHref) {
-      window.location.href = targetHref;
+    if (targetForm) {
+      targetForm.submit(); // For logout form
+    } else if (targetHref) {
+      window.location.href = targetHref; // For links (login, etc.)
     }
   });
 
   // NO -> close modal
   confirmNo.addEventListener("click", function () {
     confirmModal.style.display = "none";
+    targetHref = "";
+    targetForm = null;
   });
 
   // Close if clicking outside modal-content
   window.addEventListener("click", function (event) {
     if (event.target === confirmModal) {
       confirmModal.style.display = "none";
+      targetHref = "";
+      targetForm = null;
     }
   });
 });
+
+
+
+// NAV BAR HIGHLIGHT
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sections = document.querySelectorAll("section");
+  const navLinks = document.querySelectorAll(".nav-link");
+
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.remove("active");
+            if (link.getAttribute("href").substring(1) === entry.target.id) {
+              link.classList.add("active");
+            }
+          });
+        }
+      });
+    },
+    { threshold: 0.6 } // adjust: how much of section must be visible
+  );
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+});
+
